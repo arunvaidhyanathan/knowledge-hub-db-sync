@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "schemas": [
+    "public"
+  ],
+  "excludeTablePatterns": [],
+  "extensions": [],
+  "restrictKey": "dbexport",
+  "piiColumnPattern": "(?i)(email|phone|mobile|ssn|tax_?id|dob|birth|address|account_?(no|num)|card|salary|passport)",
+  "limits": {
+    "maxRowsPerTable": 50000,
+    "maxBytesPerFile": 10485760
+  },
+  "master": [],
+  "tsOutput": "frontend/src/generated/master-data.ts"
+}
