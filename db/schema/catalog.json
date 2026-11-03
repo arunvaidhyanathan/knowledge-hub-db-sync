@@ -1,0 +1,4653 @@
+{
+  "enums": [],
+  "extensions": [
+    {
+      "name": "pg_cron",
+      "schema": "pg_catalog",
+      "version": "1.6"
+    },
+    {
+      "name": "pg_graphql",
+      "schema": "graphql",
+      "version": "1.5.11"
+    },
+    {
+      "name": "pg_stat_statements",
+      "schema": "extensions",
+      "version": "1.10"
+    },
+    {
+      "name": "pgcrypto",
+      "schema": "extensions",
+      "version": "1.3"
+    },
+    {
+      "name": "pgjwt",
+      "schema": "extensions",
+      "version": "0.2.0"
+    },
+    {
+      "name": "pgsodium",
+      "schema": "pgsodium",
+      "version": "3.1.8"
+    },
+    {
+      "name": "plpgsql",
+      "schema": "pg_catalog",
+      "version": "1.0"
+    },
+    {
+      "name": "supabase_vault",
+      "schema": "vault",
+      "version": "0.3.1"
+    },
+    {
+      "name": "uuid-ossp",
+      "schema": "extensions",
+      "version": "1.1"
+    },
+    {
+      "name": "vector",
+      "schema": "extensions",
+      "version": "0.8.0"
+    }
+  ],
+  "formatVersion": 1,
+  "functions": [
+    {
+      "arguments": "",
+      "definitionMd5": "c06bef7c47022f6d593faf835c746a73",
+      "kind": "p",
+      "name": "unpartition_all_cads_tables",
+      "returns": null,
+      "schema": "cads"
+    },
+    {
+      "arguments": "",
+      "definitionMd5": "76eed529a52ab5cdd7b307750fe301f4",
+      "kind": "f",
+      "name": "audit_approval_decision",
+      "returns": "trigger",
+      "schema": "public"
+    },
+    {
+      "arguments": "",
+      "definitionMd5": "9182747468ca4610cb57ab93e5bef4e9",
+      "kind": "f",
+      "name": "audit_profile_status_change",
+      "returns": "trigger",
+      "schema": "public"
+    },
+    {
+      "arguments": "",
+      "definitionMd5": "e54931d627f7b1e88d3d9a8d968d8867",
+      "kind": "f",
+      "name": "audit_workflow_archive",
+      "returns": "trigger",
+      "schema": "public"
+    },
+    {
+      "arguments": "",
+      "definitionMd5": "22e18151c246e9423d6b316a5134f780",
+      "kind": "f",
+      "name": "audit_workflow_delete",
+      "returns": "trigger",
+      "schema": "public"
+    },
+    {
+      "arguments": "",
+      "definitionMd5": "f2d5c2cbc85f186171638b431362ce09",
+      "kind": "f",
+      "name": "current_role_claim",
+      "returns": "text",
+      "schema": "public"
+    },
+    {
+      "arguments": "",
+      "definitionMd5": "7a0b478f75817e0a1c8998041eb6ff08",
+      "kind": "f",
+      "name": "current_tenant_id",
+      "returns": "uuid",
+      "schema": "public"
+    },
+    {
+      "arguments": "",
+      "definitionMd5": "af1f162a427aa0790667ab9cb5b919aa",
+      "kind": "f",
+      "name": "is_current_user_active",
+      "returns": "boolean",
+      "schema": "public"
+    },
+    {
+      "arguments": "query_embedding vector, match_spec text, match_model text, match_count integer, exclude_workflow uuid",
+      "definitionMd5": "bc551f99d852196de394368e5898f383",
+      "kind": "f",
+      "name": "match_workflow_embeddings",
+      "returns": "TABLE(workflow_id uuid, workflow_version_id uuid, name text, summary text, similarity double precision)",
+      "schema": "public"
+    },
+    {
+      "arguments": "",
+      "definitionMd5": "50b4fc0a556dad294509b8974336a070",
+      "kind": "f",
+      "name": "reset_workflow_status_on_new_version",
+      "returns": "trigger",
+      "schema": "public"
+    },
+    {
+      "arguments": "",
+      "definitionMd5": "150bfe9ebbf49b31cfcf45db191d893d",
+      "kind": "f",
+      "name": "sync_profile_email",
+      "returns": "trigger",
+      "schema": "public"
+    },
+    {
+      "arguments": "",
+      "definitionMd5": "a1d940abc36b1e1654e2aeae2532ae2c",
+      "kind": "f",
+      "name": "sync_workflow_status_from_approval",
+      "returns": "trigger",
+      "schema": "public"
+    }
+  ],
+  "schemas": [
+    "cads",
+    "public"
+  ],
+  "sequences": [
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "alert_attachments_attachment_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "alert_audit_audit_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "alert_details_mst_alert_detail_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "alert_notes_note_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "business_on_boarding_onboarding_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "business_role_role_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "business_units_unit_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "business_user_user_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "continents_continent_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "countries_country_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "db_release_info_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "bigint"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "empty_partitions_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "bigint"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "match_notes_match_note_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "notes_audit_audit_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "regions_region_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "search_config_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "integer"
+    },
+    {
+      "cycle": false,
+      "increment": 1,
+      "name": "table_list_id_seq",
+      "schema": "cads",
+      "start": 1,
+      "type": "bigint"
+    }
+  ],
+  "serverMajorVersion": 15,
+  "tables": [
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.alert_attachments_attachment_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "attachment_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "alert_id",
+          "notNull": false,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "file_name",
+          "notNull": true,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "file_path",
+          "notNull": true,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "modified_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (attachment_id)",
+          "name": "alert_attachments_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "alert_attachments",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.alert_audit_audit_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "audit_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "alert_id",
+          "notNull": false,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "user_id",
+          "notNull": false,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "action",
+          "notNull": false,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "details",
+          "notNull": false,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (audit_id)",
+          "name": "alert_audit_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "alert_audit",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "alert_id",
+          "notNull": true,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "pp_message",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": "CURRENT_DATE",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": true,
+          "type": "timestamp(0) without time zone"
+        },
+        {
+          "comment": null,
+          "default": "'System'::character varying",
+          "generated": null,
+          "identity": null,
+          "name": "created_by",
+          "notNull": true,
+          "type": "character varying(15)"
+        },
+        {
+          "comment": null,
+          "default": "CURRENT_DATE",
+          "generated": null,
+          "identity": null,
+          "name": "partition_date",
+          "notNull": true,
+          "type": "timestamp(0) without time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "gi_message",
+          "notNull": false,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "last_updated_by",
+          "notNull": false,
+          "type": "character varying(15)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "last_updated_date",
+          "notNull": false,
+          "type": "timestamp(0) without time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "is_post_positive_completed",
+          "notNull": false,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "is_early_pp_completed",
+          "notNull": false,
+          "type": "character(1)"
+        }
+      ],
+      "comment": null,
+      "constraints": [],
+      "indexes": [],
+      "kind": "partitioned_table",
+      "name": "alert_cstm_attributes",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "alert_id",
+          "notNull": true,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "field_name",
+          "notNull": true,
+          "type": "character varying(4000)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "field_name_alias",
+          "notNull": true,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "field_value_offset",
+          "notNull": true,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "field_order",
+          "notNull": true,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": "((clock_timestamp() AT TIME ZONE COALESCE(current_setting('aws_oracle_ext.tz'::text, true), 'UTC'::text)))::timestamp(0) without time zone",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "timestamp(0) without time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "last_updated_date",
+          "notNull": false,
+          "type": "timestamp(0) without time zone"
+        },
+        {
+          "comment": null,
+          "default": "'System'::character varying",
+          "generated": null,
+          "identity": null,
+          "name": "created_by",
+          "notNull": true,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "last_updated_by",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "version",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": "CURRENT_DATE",
+          "generated": null,
+          "identity": null,
+          "name": "partition_date",
+          "notNull": true,
+          "type": "timestamp(0) without time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "field_value",
+          "notNull": false,
+          "type": "character varying(4000)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "is_field_value_clob",
+          "notNull": false,
+          "type": "character(1)"
+        }
+      ],
+      "comment": null,
+      "constraints": [],
+      "indexes": [
+        {
+          "definition": "CREATE INDEX alert_det_alert_id_idx ON ONLY cads.alert_det USING btree (alert_id)",
+          "name": "alert_det_alert_id_idx",
+          "unique": false
+        }
+      ],
+      "kind": "partitioned_table",
+      "name": "alert_det",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.alert_details_mst_alert_detail_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "alert_detail_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "alert_id",
+          "notNull": false,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "detail_description",
+          "notNull": false,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "modified_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (alert_detail_id)",
+          "name": "alert_details_mst_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "alert_details_mst",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "source_system",
+          "notNull": true,
+          "type": "character varying(250)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "due_time",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "priority",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "alert_type",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "business_unit",
+          "notNull": true,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "business_user",
+          "notNull": false,
+          "type": "character varying(20)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "rule_set",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "txn_id",
+          "notNull": true,
+          "type": "character varying(250)"
+        },
+        {
+          "comment": null,
+          "default": "CURRENT_TIMESTAMP",
+          "generated": null,
+          "identity": null,
+          "name": "last_updated_date",
+          "notNull": true,
+          "type": "timestamp without time zone"
+        },
+        {
+          "comment": null,
+          "default": "'System'::character varying",
+          "generated": null,
+          "identity": null,
+          "name": "created_by",
+          "notNull": true,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "last_updated_by",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "amount",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "hit_count",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "currency",
+          "notNull": false,
+          "type": "character varying(3)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "replyto_queue_name",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "request_number",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "reply_to_manager",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "value_date",
+          "notNull": false,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "branch",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "last_transaction_date",
+          "notNull": false,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "closed_date",
+          "notNull": false,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "qa_status",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "direction",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "receiver",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "systemid",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "remaining_sanctions_matches",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "steps",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "closed_by",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "origination_branch",
+          "notNull": false,
+          "type": "character varying(250)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "origination_region",
+          "notNull": false,
+          "type": "character varying(250)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "is_post_positive_completed",
+          "notNull": false,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "application_alias_name",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "unique_transaction_reference",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "country_origination",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "country_intermediary",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "country_destination",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "last_stage",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "screening_type",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "screening_category",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "sector",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "business_line",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "product",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "sub_product",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "local_reference",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "transaction_date",
+          "notNull": false,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "sender_bic",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "receiver_bic",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "payment_currency",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "queue_transition_date",
+          "notNull": false,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "qa_closed_by",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "header_version",
+          "notNull": false,
+          "type": "character(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "inquiry_step_identifier",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "business_id",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "original_debtor_name",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "beneficiary_account",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "ordering_customer_account",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "product_code",
+          "notNull": false,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "secondary_site",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "derived_step_identifier",
+          "notNull": false,
+          "type": "character varying(250)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "branch_txn_id",
+          "notNull": false,
+          "type": "character varying(250)"
+        },
+        {
+          "comment": null,
+          "default": "'No'::bpchar",
+          "generated": null,
+          "identity": null,
+          "name": "l3_dual_review",
+          "notNull": false,
+          "type": "character(3)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "research_type",
+          "notNull": false,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "updated_final_decision",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "udf1_datetime",
+          "notNull": false,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "screened_date",
+          "notNull": false,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "org_citi_legal_vehicle",
+          "notNull": false,
+          "type": "character varying(750)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "org_citi_legal_vehicle_type",
+          "notNull": false,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "dest_citi_legal_vehicle",
+          "notNull": false,
+          "type": "character varying(750)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "dest_citi_legal_vehicle_type",
+          "notNull": false,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "dr_alert_id",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "uk_sanctions_authority",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "auto_dispose_matches",
+          "notNull": false,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "lapc_alert",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "citi_enabled",
+          "notNull": false,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "parent_alert_id",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "rescind_status",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "rmp_alert",
+          "notNull": false,
+          "type": "character varying(250)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "rmp_prev_alertid",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "rmp_rules",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "rmp_csaw_instance",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "bulk_process_req_id",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "rtm_alert_id",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": "'N'::bpchar",
+          "generated": null,
+          "identity": null,
+          "name": "is_urgent",
+          "notNull": false,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "partition_date",
+          "notNull": true,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "step_identifier",
+          "notNull": false,
+          "type": "character varying(250)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "classification",
+          "notNull": false,
+          "type": "character varying(250)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "date"
+        }
+      ],
+      "comment": null,
+      "constraints": [],
+      "indexes": [],
+      "kind": "table",
+      "name": "alert_mst",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.alert_notes_note_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "note_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "alert_id",
+          "notNull": false,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "note_text",
+          "notNull": false,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "modified_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (note_id)",
+          "name": "alert_notes_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "alert_notes",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.business_on_boarding_onboarding_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "onboarding_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "user_id",
+          "notNull": false,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "unit_id",
+          "notNull": false,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "start_date",
+          "notNull": false,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "end_date",
+          "notNull": false,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "modified_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (onboarding_id)",
+          "name": "business_on_boarding_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "FOREIGN KEY (unit_id) REFERENCES cads.business_units(unit_id)",
+          "name": "business_on_boarding_unit_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "FOREIGN KEY (user_id) REFERENCES cads.business_user(user_id)",
+          "name": "business_on_boarding_user_id_fkey",
+          "type": "f"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "business_on_boarding",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.business_role_role_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "role_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "role_name",
+          "notNull": true,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "description",
+          "notNull": false,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "modified_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (role_id)",
+          "name": "business_role_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "UNIQUE (role_name)",
+          "name": "business_role_role_name_key",
+          "type": "u"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "business_role",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.business_units_unit_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "unit_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "unit_name",
+          "notNull": true,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "description",
+          "notNull": false,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "modified_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (unit_id)",
+          "name": "business_units_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "business_units",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.business_user_user_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "user_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "username",
+          "notNull": true,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "password",
+          "notNull": true,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "email",
+          "notNull": false,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "role_id",
+          "notNull": false,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "modified_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (user_id)",
+          "name": "business_user_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "FOREIGN KEY (role_id) REFERENCES cads.business_role(role_id)",
+          "name": "business_user_role_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "UNIQUE (username)",
+          "name": "business_user_username_key",
+          "type": "u"
+        }
+      ],
+      "indexes": [
+        {
+          "definition": "CREATE INDEX idx_business_user_username ON cads.business_user USING btree (username)",
+          "name": "idx_business_user_username",
+          "unique": false
+        }
+      ],
+      "kind": "table",
+      "name": "business_user",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.continents_continent_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "continent_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "continent_name",
+          "notNull": true,
+          "type": "character varying(100)"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "UNIQUE (continent_name)",
+          "name": "continents_continent_name_key",
+          "type": "u"
+        },
+        {
+          "definition": "PRIMARY KEY (continent_id)",
+          "name": "continents_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "continents",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.countries_country_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "country_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "country_name",
+          "notNull": true,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "region_id",
+          "notNull": false,
+          "type": "integer"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (country_id)",
+          "name": "countries_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "FOREIGN KEY (region_id) REFERENCES cads.regions(region_id) ON DELETE CASCADE",
+          "name": "countries_region_id_fkey",
+          "type": "f"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "countries",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "author",
+          "notNull": true,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "filename",
+          "notNull": true,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "dateexecuted",
+          "notNull": true,
+          "type": "timestamp without time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "orderexecuted",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "exectype",
+          "notNull": true,
+          "type": "character varying(10)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "md5sum",
+          "notNull": false,
+          "type": "character varying(35)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "description",
+          "notNull": false,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "comments",
+          "notNull": false,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "tag",
+          "notNull": false,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "liquibase",
+          "notNull": false,
+          "type": "character varying(20)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "contexts",
+          "notNull": false,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "labels",
+          "notNull": false,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "deployment_id",
+          "notNull": false,
+          "type": "character varying(10)"
+        }
+      ],
+      "comment": null,
+      "constraints": [],
+      "indexes": [],
+      "kind": "table",
+      "name": "databasechangelog",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "locked",
+          "notNull": true,
+          "type": "boolean"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "lockgranted",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "lockedby",
+          "notNull": false,
+          "type": "character varying(255)"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "databasechangeloglock_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "databasechangeloglock",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": "d",
+          "name": "id",
+          "notNull": true,
+          "type": "bigint"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "version",
+          "notNull": true,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "description",
+          "notNull": false,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "release_date",
+          "notNull": true,
+          "type": "timestamp without time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "released_by",
+          "notNull": false,
+          "type": "character varying(100)"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "db_release_info_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "db_release_info",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.empty_partitions_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "bigint"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "dropped_at",
+          "notNull": false,
+          "type": "timestamp(6) without time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "identified_at",
+          "notNull": false,
+          "type": "timestamp(6) without time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "is_dropped",
+          "notNull": true,
+          "type": "boolean"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "partition_name",
+          "notNull": false,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "table_name",
+          "notNull": false,
+          "type": "character varying(255)"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "empty_partitions_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "empty_partitions",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "field_group",
+          "notNull": true,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "field_name",
+          "notNull": true,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "field_type",
+          "notNull": true,
+          "type": "character varying(20)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "display_order",
+          "notNull": true,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "gui_identifier",
+          "notNull": true,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "created_by",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "updated_by",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "updated_date",
+          "notNull": false,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "is_active",
+          "notNull": true,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "partition_date",
+          "notNull": false,
+          "type": "date"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "is_sortable",
+          "notNull": true,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "collection_name",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "regex_enabled",
+          "notNull": false,
+          "type": "character varying(1)"
+        }
+      ],
+      "comment": null,
+      "constraints": [],
+      "indexes": [],
+      "kind": "table",
+      "name": "enhanced_search_fields",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "gui_identifier",
+          "notNull": true,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "role_identifier",
+          "notNull": true,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "label",
+          "notNull": false,
+          "type": "character varying(1000)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "user_language",
+          "notNull": true,
+          "type": "character varying(100)"
+        }
+      ],
+      "comment": null,
+      "constraints": [],
+      "indexes": [],
+      "kind": "table",
+      "name": "gui_label",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "match_pattern_value",
+          "notNull": true,
+          "type": "character varying(700)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "hit_percentage",
+          "notNull": true,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "matchable_description",
+          "notNull": false,
+          "type": "character varying(4000)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "category",
+          "notNull": false,
+          "type": "character varying(400)"
+        },
+        {
+          "comment": null,
+          "default": "CURRENT_DATE",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": true,
+          "type": "timestamp(0) without time zone"
+        },
+        {
+          "comment": null,
+          "default": "'System'::character varying",
+          "generated": null,
+          "identity": null,
+          "name": "created_by",
+          "notNull": true,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "alert_det_id",
+          "notNull": true,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "offset",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "match_length",
+          "notNull": true,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "version",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "last_transitioned_by",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": "CURRENT_DATE",
+          "generated": null,
+          "identity": null,
+          "name": "partition_date",
+          "notNull": true,
+          "type": "timestamp(0) without time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "alert_id",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "hit_number",
+          "notNull": false,
+          "type": "numeric(40,0)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "hit_type",
+          "notNull": false,
+          "type": "character varying(250)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "match_text",
+          "notNull": false,
+          "type": "character varying(4000)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "taxonomy_sub_taxonomy_id",
+          "notNull": false,
+          "type": "numeric"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "coverage_area",
+          "notNull": false,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "specific_coverage_area",
+          "notNull": false,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": "'N'::bpchar",
+          "generated": null,
+          "identity": null,
+          "name": "is_final_decision",
+          "notNull": false,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "hit_touch_count",
+          "notNull": false,
+          "type": "numeric(40,0)"
+        },
+        {
+          "comment": null,
+          "default": "'N'::bpchar",
+          "generated": null,
+          "identity": null,
+          "name": "confirmed_false_match",
+          "notNull": false,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": "'N'::bpchar",
+          "generated": null,
+          "identity": null,
+          "name": "l3_escalation_not_required",
+          "notNull": false,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "category_lookup",
+          "notNull": false,
+          "type": "character varying(40)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "rule_checksum",
+          "notNull": false,
+          "type": "character varying(40)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "repair_checksum",
+          "notNull": false,
+          "type": "character varying(40)"
+        },
+        {
+          "comment": null,
+          "default": "'N'::bpchar",
+          "generated": null,
+          "identity": null,
+          "name": "l3_checker_required",
+          "notNull": false,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": "'N'::bpchar",
+          "generated": null,
+          "identity": null,
+          "name": "is_default_taxonomy",
+          "notNull": false,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "last_updated_date",
+          "notNull": false,
+          "type": "timestamp(0) without time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "add_matchable_description",
+          "notNull": false,
+          "type": "character varying(4000)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "mid_type",
+          "notNull": false,
+          "type": "character varying(18)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "list_entry_type",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "list_entry_type_mg",
+          "notNull": false,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "is_batch_disposed",
+          "notNull": false,
+          "type": "character(1)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "bulk_process_req_id",
+          "notNull": false,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "rule_engine_id",
+          "notNull": false,
+          "type": "integer"
+        }
+      ],
+      "comment": null,
+      "constraints": [],
+      "indexes": [],
+      "kind": "partitioned_table",
+      "name": "hit_match_detail",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.match_notes_match_note_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "match_note_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "alert_detail_id",
+          "notNull": false,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "note_text",
+          "notNull": false,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "modified_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "FOREIGN KEY (alert_detail_id) REFERENCES cads.alert_details_mst(alert_detail_id)",
+          "name": "match_notes_alert_detail_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "PRIMARY KEY (match_note_id)",
+          "name": "match_notes_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "match_notes",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.notes_audit_audit_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "audit_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "note_id",
+          "notNull": false,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "user_id",
+          "notNull": false,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "action",
+          "notNull": false,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "details",
+          "notNull": false,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": "(now() AT TIME ZONE 'utc'::text)",
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "timestamp without time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "FOREIGN KEY (note_id) REFERENCES cads.alert_notes(note_id)",
+          "name": "notes_audit_note_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "PRIMARY KEY (audit_id)",
+          "name": "notes_audit_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "notes_audit",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.regions_region_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "region_id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "region_name",
+          "notNull": true,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "continent_id",
+          "notNull": false,
+          "type": "integer"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "FOREIGN KEY (continent_id) REFERENCES cads.continents(continent_id) ON DELETE CASCADE",
+          "name": "regions_continent_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "PRIMARY KEY (region_id)",
+          "name": "regions_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "regions",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.search_config_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "table_name",
+          "notNull": false,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "column_name",
+          "notNull": false,
+          "type": "character varying(100)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "search_type",
+          "notNull": false,
+          "type": "character varying(50)"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "search_config_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "search_config",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "nextval('cads.table_list_id_seq'::regclass)",
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "bigint"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "has_partitions",
+          "notNull": true,
+          "type": "boolean"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "table_name",
+          "notNull": false,
+          "type": "character varying(255)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "table_schema",
+          "notNull": false,
+          "type": "character varying(255)"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "table_list_pkey",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "table_list",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "user_identifier",
+          "notNull": true,
+          "type": "character varying(50)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "bu_identifier",
+          "notNull": true,
+          "type": "character varying(500)"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "created_date",
+          "notNull": false,
+          "type": "timestamp(0) without time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "created_by",
+          "notNull": false,
+          "type": "character varying(100)"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (user_identifier, bu_identifier)",
+          "name": "user_bu_map_pk",
+          "type": "p"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "user_bu_map",
+      "policies": [],
+      "rowSecurity": false,
+      "schema": "cads",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "gen_random_uuid()",
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "tenant_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "workflow_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "version_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "requested_by",
+          "notNull": false,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": "now()",
+          "generated": null,
+          "identity": null,
+          "name": "requested_at",
+          "notNull": true,
+          "type": "timestamp with time zone"
+        },
+        {
+          "comment": null,
+          "default": "'pending'::text",
+          "generated": null,
+          "identity": null,
+          "name": "status",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "approver_id",
+          "notNull": false,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "decided_at",
+          "notNull": false,
+          "type": "timestamp with time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "comment",
+          "notNull": false,
+          "type": "text"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "FOREIGN KEY (approver_id) REFERENCES profiles(id)",
+          "name": "approval_requests_approver_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "approval_requests_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "FOREIGN KEY (requested_by) REFERENCES profiles(id)",
+          "name": "approval_requests_requested_by_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "CHECK (status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text]))",
+          "name": "approval_requests_status_check",
+          "type": "c"
+        },
+        {
+          "definition": "FOREIGN KEY (tenant_id) REFERENCES tenants(id)",
+          "name": "approval_requests_tenant_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "FOREIGN KEY (version_id) REFERENCES workflow_versions(id)",
+          "name": "approval_requests_version_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "FOREIGN KEY (workflow_id) REFERENCES workflows(id)",
+          "name": "approval_requests_workflow_id_fkey",
+          "type": "f"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "approval_requests",
+      "policies": [
+        {
+          "check": "((tenant_id = current_tenant_id()) AND (requested_by IS DISTINCT FROM auth.uid()))",
+          "command": "w",
+          "name": "approval_requests admin decide",
+          "using": "((tenant_id = current_tenant_id()) AND (current_role_claim() = 'approver'::text) AND is_current_user_active() AND (requested_by IS DISTINCT FROM auth.uid()))"
+        },
+        {
+          "check": "((tenant_id = current_tenant_id()) AND (current_role_claim() = ANY (ARRAY['designer'::text, 'tenant_admin'::text])) AND is_current_user_active() AND (workflow_id IN ( SELECT workflows.id\n   FROM workflows\n  WHERE (workflows.tenant_id = current_tenant_id()))))",
+          "command": "a",
+          "name": "approval_requests designer insert",
+          "using": null
+        },
+        {
+          "check": null,
+          "command": "r",
+          "name": "approval_requests tenant read",
+          "using": "(tenant_id = current_tenant_id())"
+        }
+      ],
+      "rowSecurity": true,
+      "schema": "public",
+      "triggers": [
+        {
+          "definition": "CREATE TRIGGER approval_requests_audit_decision AFTER UPDATE ON approval_requests FOR EACH ROW EXECUTE FUNCTION audit_approval_decision()",
+          "name": "approval_requests_audit_decision"
+        },
+        {
+          "definition": "CREATE TRIGGER approval_requests_sync_status AFTER INSERT OR UPDATE ON approval_requests FOR EACH ROW EXECUTE FUNCTION sync_workflow_status_from_approval()",
+          "name": "approval_requests_sync_status"
+        }
+      ],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "gen_random_uuid()",
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "tenant_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "actor_id",
+          "notNull": false,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "action",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "entity_type",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "entity_id",
+          "notNull": false,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "before",
+          "notNull": false,
+          "type": "jsonb"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "after",
+          "notNull": false,
+          "type": "jsonb"
+        },
+        {
+          "comment": null,
+          "default": "now()",
+          "generated": null,
+          "identity": null,
+          "name": "occurred_at",
+          "notNull": true,
+          "type": "timestamp with time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "FOREIGN KEY (actor_id) REFERENCES profiles(id)",
+          "name": "audit_logs_actor_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "audit_logs_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "FOREIGN KEY (tenant_id) REFERENCES tenants(id)",
+          "name": "audit_logs_tenant_id_fkey",
+          "type": "f"
+        }
+      ],
+      "indexes": [
+        {
+          "definition": "CREATE INDEX audit_logs_tenant_occurred_idx ON public.audit_logs USING btree (tenant_id, occurred_at DESC)",
+          "name": "audit_logs_tenant_occurred_idx",
+          "unique": false
+        }
+      ],
+      "kind": "table",
+      "name": "audit_logs",
+      "policies": [
+        {
+          "check": null,
+          "command": "r",
+          "name": "audit_logs tenant_admin read",
+          "using": "((tenant_id = current_tenant_id()) AND (current_role_claim() = 'tenant_admin'::text))"
+        }
+      ],
+      "rowSecurity": true,
+      "schema": "public",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "gen_random_uuid()",
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "workflow_version_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "tenant_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "flowable_deployment_id",
+          "notNull": false,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "deployed_by",
+          "notNull": false,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": "now()",
+          "generated": null,
+          "identity": null,
+          "name": "deployed_at",
+          "notNull": true,
+          "type": "timestamp with time zone"
+        },
+        {
+          "comment": null,
+          "default": "'pending'::text",
+          "generated": null,
+          "identity": null,
+          "name": "status",
+          "notNull": true,
+          "type": "text"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "FOREIGN KEY (deployed_by) REFERENCES profiles(id)",
+          "name": "deployments_deployed_by_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "deployments_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "CHECK (status = ANY (ARRAY['pending'::text, 'active'::text, 'failed'::text, 'superseded'::text]))",
+          "name": "deployments_status_check",
+          "type": "c"
+        },
+        {
+          "definition": "FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE",
+          "name": "deployments_tenant_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "FOREIGN KEY (workflow_version_id) REFERENCES workflow_versions(id)",
+          "name": "deployments_workflow_version_id_fkey",
+          "type": "f"
+        }
+      ],
+      "indexes": [
+        {
+          "definition": "CREATE INDEX idx_deployments_tenant ON public.deployments USING btree (tenant_id)",
+          "name": "idx_deployments_tenant",
+          "unique": false
+        },
+        {
+          "definition": "CREATE INDEX idx_deployments_version ON public.deployments USING btree (workflow_version_id)",
+          "name": "idx_deployments_version",
+          "unique": false
+        }
+      ],
+      "kind": "table",
+      "name": "deployments",
+      "policies": [
+        {
+          "check": "((tenant_id = current_tenant_id()) AND (current_role_claim() = ANY (ARRAY['designer'::text, 'tenant_admin'::text])) AND is_current_user_active())",
+          "command": "a",
+          "name": "deployments designer insert",
+          "using": null
+        },
+        {
+          "check": null,
+          "command": "r",
+          "name": "deployments tenant read",
+          "using": "(tenant_id = current_tenant_id())"
+        }
+      ],
+      "rowSecurity": true,
+      "schema": "public",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "gen_random_uuid()",
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "tenant_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "form_key",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "json_schema",
+          "notNull": true,
+          "type": "jsonb"
+        },
+        {
+          "comment": null,
+          "default": "1",
+          "generated": null,
+          "identity": null,
+          "name": "version",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": "now()",
+          "generated": null,
+          "identity": null,
+          "name": "created_at",
+          "notNull": true,
+          "type": "timestamp with time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "form_schemas_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE",
+          "name": "form_schemas_tenant_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "UNIQUE (tenant_id, form_key, version)",
+          "name": "form_schemas_tenant_id_form_key_version_key",
+          "type": "u"
+        }
+      ],
+      "indexes": [
+        {
+          "definition": "CREATE INDEX idx_form_schemas_tenant ON public.form_schemas USING btree (tenant_id)",
+          "name": "idx_form_schemas_tenant",
+          "unique": false
+        }
+      ],
+      "kind": "table",
+      "name": "form_schemas",
+      "policies": [
+        {
+          "check": "(tenant_id = current_tenant_id())",
+          "command": "w",
+          "name": "forms designer update",
+          "using": "((tenant_id = current_tenant_id()) AND (current_role_claim() = ANY (ARRAY['designer'::text, 'tenant_admin'::text])) AND is_current_user_active())"
+        },
+        {
+          "check": "((tenant_id = current_tenant_id()) AND (current_role_claim() = ANY (ARRAY['designer'::text, 'tenant_admin'::text])) AND is_current_user_active())",
+          "command": "a",
+          "name": "forms designer write",
+          "using": null
+        },
+        {
+          "check": null,
+          "command": "r",
+          "name": "forms tenant read",
+          "using": "(tenant_id = current_tenant_id())"
+        }
+      ],
+      "rowSecurity": true,
+      "schema": "public",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "gen_random_uuid()",
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "tenant_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "email",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "role",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "invited_by",
+          "notNull": false,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": "'invited'::text",
+          "generated": null,
+          "identity": null,
+          "name": "status",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": "now()",
+          "generated": null,
+          "identity": null,
+          "name": "created_at",
+          "notNull": true,
+          "type": "timestamp with time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "accepted_at",
+          "notNull": false,
+          "type": "timestamp with time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "FOREIGN KEY (invited_by) REFERENCES profiles(id)",
+          "name": "invites_invited_by_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "invites_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "CHECK (role = ANY (ARRAY['designer'::text, 'tenant_admin'::text, 'approver'::text, 'viewer'::text]))",
+          "name": "invites_role_check",
+          "type": "c"
+        },
+        {
+          "definition": "CHECK (status = ANY (ARRAY['invited'::text, 'accepted'::text, 'revoked'::text]))",
+          "name": "invites_status_check",
+          "type": "c"
+        },
+        {
+          "definition": "FOREIGN KEY (tenant_id) REFERENCES tenants(id)",
+          "name": "invites_tenant_id_fkey",
+          "type": "f"
+        }
+      ],
+      "indexes": [
+        {
+          "definition": "CREATE INDEX invites_tenant_idx ON public.invites USING btree (tenant_id, created_at DESC)",
+          "name": "invites_tenant_idx",
+          "unique": false
+        }
+      ],
+      "kind": "table",
+      "name": "invites",
+      "policies": [
+        {
+          "check": null,
+          "command": "r",
+          "name": "invites tenant_admin read",
+          "using": "((tenant_id = current_tenant_id()) AND (current_role_claim() = 'tenant_admin'::text))"
+        },
+        {
+          "check": "((tenant_id = current_tenant_id()) AND (status = 'revoked'::text))",
+          "command": "w",
+          "name": "invites tenant_admin revoke",
+          "using": "((tenant_id = current_tenant_id()) AND (current_role_claim() = 'tenant_admin'::text) AND (status = 'invited'::text) AND is_current_user_active())"
+        }
+      ],
+      "rowSecurity": true,
+      "schema": "public",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "tenant_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "role",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "display_name",
+          "notNull": false,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": "now()",
+          "generated": null,
+          "identity": null,
+          "name": "created_at",
+          "notNull": true,
+          "type": "timestamp with time zone"
+        },
+        {
+          "comment": null,
+          "default": "'active'::text",
+          "generated": null,
+          "identity": null,
+          "name": "status",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "onboarding_dismissed_at",
+          "notNull": false,
+          "type": "timestamp with time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "email",
+          "notNull": false,
+          "type": "text"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE",
+          "name": "profiles_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "profiles_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "CHECK (role = ANY (ARRAY['designer'::text, 'tenant_admin'::text, 'approver'::text, 'viewer'::text]))",
+          "name": "profiles_role_check",
+          "type": "c"
+        },
+        {
+          "definition": "CHECK (status = ANY (ARRAY['active'::text, 'deactivated'::text]))",
+          "name": "profiles_status_check",
+          "type": "c"
+        },
+        {
+          "definition": "FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE RESTRICT",
+          "name": "profiles_tenant_id_fkey",
+          "type": "f"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "profiles",
+      "policies": [
+        {
+          "check": "((tenant_id = current_tenant_id()) AND (current_role_claim() = 'tenant_admin'::text))",
+          "command": "w",
+          "name": "profiles admin update",
+          "using": "((tenant_id = current_tenant_id()) AND (current_role_claim() = 'tenant_admin'::text) AND is_current_user_active())"
+        },
+        {
+          "check": "((id = auth.uid()) AND (role = ( SELECT p.role\n   FROM profiles p\n  WHERE (p.id = auth.uid()))) AND (tenant_id = ( SELECT p.tenant_id\n   FROM profiles p\n  WHERE (p.id = auth.uid()))) AND (NOT (email IS DISTINCT FROM ( SELECT p.email\n   FROM profiles p\n  WHERE (p.id = auth.uid())))))",
+          "command": "w",
+          "name": "profiles self update",
+          "using": "(id = auth.uid())"
+        },
+        {
+          "check": null,
+          "command": "r",
+          "name": "profiles tenant read",
+          "using": "(tenant_id = current_tenant_id())"
+        }
+      ],
+      "rowSecurity": true,
+      "schema": "public",
+      "triggers": [
+        {
+          "definition": "CREATE TRIGGER profiles_audit_status AFTER UPDATE ON profiles FOR EACH ROW EXECUTE FUNCTION audit_profile_status_change()",
+          "name": "profiles_audit_status"
+        }
+      ],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "gen_random_uuid()",
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "name",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "slug",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": "now()",
+          "generated": null,
+          "identity": null,
+          "name": "created_at",
+          "notNull": true,
+          "type": "timestamp with time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "tenants_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "UNIQUE (slug)",
+          "name": "tenants_slug_key",
+          "type": "u"
+        }
+      ],
+      "indexes": [],
+      "kind": "table",
+      "name": "tenants",
+      "policies": [
+        {
+          "check": null,
+          "command": "r",
+          "name": "tenant self read",
+          "using": "(id = current_tenant_id())"
+        }
+      ],
+      "rowSecurity": true,
+      "schema": "public",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "gen_random_uuid()",
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "tenant_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "workflow_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "workflow_version_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "spec_type",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "model",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "content_hash",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "summary",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "embedding",
+          "notNull": true,
+          "type": "vector"
+        },
+        {
+          "comment": null,
+          "default": "now()",
+          "generated": null,
+          "identity": null,
+          "name": "created_at",
+          "notNull": true,
+          "type": "timestamp with time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "workflow_embeddings_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "CHECK (spec_type = ANY (ARRAY['BPMN'::text, 'CMMN'::text, 'DMN'::text]))",
+          "name": "workflow_embeddings_spec_type_check",
+          "type": "c"
+        },
+        {
+          "definition": "FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE",
+          "name": "workflow_embeddings_tenant_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "FOREIGN KEY (workflow_id) REFERENCES workflows(id) ON DELETE CASCADE",
+          "name": "workflow_embeddings_workflow_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "FOREIGN KEY (workflow_version_id) REFERENCES workflow_versions(id) ON DELETE CASCADE",
+          "name": "workflow_embeddings_workflow_version_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "UNIQUE (workflow_version_id, model)",
+          "name": "workflow_embeddings_workflow_version_id_model_key",
+          "type": "u"
+        }
+      ],
+      "indexes": [
+        {
+          "definition": "CREATE INDEX workflow_embeddings_tenant_spec_model ON public.workflow_embeddings USING btree (tenant_id, spec_type, model)",
+          "name": "workflow_embeddings_tenant_spec_model",
+          "unique": false
+        }
+      ],
+      "kind": "table",
+      "name": "workflow_embeddings",
+      "policies": [
+        {
+          "check": "((tenant_id = current_tenant_id()) AND (current_role_claim() = ANY (ARRAY['designer'::text, 'tenant_admin'::text])) AND is_current_user_active() AND (workflow_id IN ( SELECT workflows.id\n   FROM workflows\n  WHERE (workflows.tenant_id = current_tenant_id()))))",
+          "command": "a",
+          "name": "embeddings designer insert",
+          "using": null
+        },
+        {
+          "check": "((tenant_id = current_tenant_id()) AND (workflow_id IN ( SELECT workflows.id\n   FROM workflows\n  WHERE (workflows.tenant_id = current_tenant_id()))))",
+          "command": "w",
+          "name": "embeddings designer update",
+          "using": "((tenant_id = current_tenant_id()) AND (current_role_claim() = ANY (ARRAY['designer'::text, 'tenant_admin'::text])) AND is_current_user_active())"
+        },
+        {
+          "check": null,
+          "command": "r",
+          "name": "embeddings tenant read",
+          "using": "(tenant_id = current_tenant_id())"
+        }
+      ],
+      "rowSecurity": true,
+      "schema": "public",
+      "triggers": [],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "gen_random_uuid()",
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "workflow_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "version_no",
+          "notNull": true,
+          "type": "integer"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "graph_json",
+          "notNull": true,
+          "type": "jsonb"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "xml_content",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "created_by",
+          "notNull": false,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": "now()",
+          "generated": null,
+          "identity": null,
+          "name": "created_at",
+          "notNull": true,
+          "type": "timestamp with time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "FOREIGN KEY (created_by) REFERENCES profiles(id)",
+          "name": "workflow_versions_created_by_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "workflow_versions_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "FOREIGN KEY (workflow_id) REFERENCES workflows(id) ON DELETE CASCADE",
+          "name": "workflow_versions_workflow_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "UNIQUE (workflow_id, version_no)",
+          "name": "workflow_versions_workflow_id_version_no_key",
+          "type": "u"
+        }
+      ],
+      "indexes": [
+        {
+          "definition": "CREATE INDEX idx_workflow_versions_workflow ON public.workflow_versions USING btree (workflow_id)",
+          "name": "idx_workflow_versions_workflow",
+          "unique": false
+        }
+      ],
+      "kind": "table",
+      "name": "workflow_versions",
+      "policies": [
+        {
+          "check": "((current_role_claim() = ANY (ARRAY['designer'::text, 'tenant_admin'::text])) AND is_current_user_active() AND (workflow_id IN ( SELECT workflows.id\n   FROM workflows\n  WHERE (workflows.tenant_id = current_tenant_id()))))",
+          "command": "a",
+          "name": "versions designer insert",
+          "using": null
+        },
+        {
+          "check": null,
+          "command": "r",
+          "name": "versions tenant read",
+          "using": "(workflow_id IN ( SELECT workflows.id\n   FROM workflows\n  WHERE (workflows.tenant_id = current_tenant_id())))"
+        }
+      ],
+      "rowSecurity": true,
+      "schema": "public",
+      "triggers": [
+        {
+          "definition": "CREATE TRIGGER workflow_versions_reset_status_after_approval AFTER INSERT ON workflow_versions FOR EACH ROW EXECUTE FUNCTION reset_workflow_status_on_new_version()",
+          "name": "workflow_versions_reset_status_after_approval"
+        }
+      ],
+      "viewDefinitionMd5": null
+    },
+    {
+      "columns": [
+        {
+          "comment": null,
+          "default": "gen_random_uuid()",
+          "generated": null,
+          "identity": null,
+          "name": "id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "tenant_id",
+          "notNull": true,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "definition_key",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "name",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "description",
+          "notNull": false,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "spec_type",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": "'draft'::text",
+          "generated": null,
+          "identity": null,
+          "name": "status",
+          "notNull": true,
+          "type": "text"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "current_version_id",
+          "notNull": false,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "locked_by",
+          "notNull": false,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "locked_at",
+          "notNull": false,
+          "type": "timestamp with time zone"
+        },
+        {
+          "comment": null,
+          "default": null,
+          "generated": null,
+          "identity": null,
+          "name": "created_by",
+          "notNull": false,
+          "type": "uuid"
+        },
+        {
+          "comment": null,
+          "default": "now()",
+          "generated": null,
+          "identity": null,
+          "name": "created_at",
+          "notNull": true,
+          "type": "timestamp with time zone"
+        },
+        {
+          "comment": null,
+          "default": "now()",
+          "generated": null,
+          "identity": null,
+          "name": "updated_at",
+          "notNull": true,
+          "type": "timestamp with time zone"
+        }
+      ],
+      "comment": null,
+      "constraints": [
+        {
+          "definition": "FOREIGN KEY (created_by) REFERENCES profiles(id)",
+          "name": "workflows_created_by_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "FOREIGN KEY (current_version_id) REFERENCES workflow_versions(id) ON DELETE SET NULL",
+          "name": "workflows_current_version_fk",
+          "type": "f"
+        },
+        {
+          "definition": "FOREIGN KEY (locked_by) REFERENCES profiles(id)",
+          "name": "workflows_locked_by_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "PRIMARY KEY (id)",
+          "name": "workflows_pkey",
+          "type": "p"
+        },
+        {
+          "definition": "CHECK (spec_type = ANY (ARRAY['BPMN'::text, 'CMMN'::text, 'DMN'::text]))",
+          "name": "workflows_spec_type_check",
+          "type": "c"
+        },
+        {
+          "definition": "CHECK (status = ANY (ARRAY['draft'::text, 'pending_approval'::text, 'approved'::text, 'deployed'::text, 'archived'::text]))",
+          "name": "workflows_status_check",
+          "type": "c"
+        },
+        {
+          "definition": "FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE",
+          "name": "workflows_tenant_id_fkey",
+          "type": "f"
+        },
+        {
+          "definition": "UNIQUE (tenant_id, definition_key)",
+          "name": "workflows_tenant_key_unique",
+          "type": "u"
+        }
+      ],
+      "indexes": [
+        {
+          "definition": "CREATE INDEX idx_workflows_tenant ON public.workflows USING btree (tenant_id)",
+          "name": "idx_workflows_tenant",
+          "unique": false
+        }
+      ],
+      "kind": "table",
+      "name": "workflows",
+      "policies": [
+        {
+          "check": null,
+          "command": "d",
+          "name": "workflows admin delete",
+          "using": "((tenant_id = current_tenant_id()) AND (current_role_claim() = 'tenant_admin'::text) AND is_current_user_active())"
+        },
+        {
+          "check": "(tenant_id = current_tenant_id())",
+          "command": "w",
+          "name": "workflows designer update",
+          "using": "((tenant_id = current_tenant_id()) AND (current_role_claim() = ANY (ARRAY['designer'::text, 'tenant_admin'::text])) AND is_current_user_active())"
+        },
+        {
+          "check": "((tenant_id = current_tenant_id()) AND (current_role_claim() = ANY (ARRAY['designer'::text, 'tenant_admin'::text])) AND is_current_user_active())",
+          "command": "a",
+          "name": "workflows designer write",
+          "using": null
+        },
+        {
+          "check": null,
+          "command": "r",
+          "name": "workflows tenant read",
+          "using": "(tenant_id = current_tenant_id())"
+        }
+      ],
+      "rowSecurity": true,
+      "schema": "public",
+      "triggers": [
+        {
+          "definition": "CREATE TRIGGER workflows_audit_archive AFTER UPDATE ON workflows FOR EACH ROW EXECUTE FUNCTION audit_workflow_archive()",
+          "name": "workflows_audit_archive"
+        },
+        {
+          "definition": "CREATE TRIGGER workflows_audit_delete AFTER DELETE ON workflows FOR EACH ROW EXECUTE FUNCTION audit_workflow_delete()",
+          "name": "workflows_audit_delete"
+        }
+      ],
+      "viewDefinitionMd5": null
+    }
+  ]
+}

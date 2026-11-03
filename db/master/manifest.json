@@ -1,0 +1,80 @@
+{
+  "formatVersion": 1,
+  "schemas": [
+    "public",
+    "cads"
+  ],
+  "tables": [
+    {
+      "classification": "reference",
+      "columns": [
+        {
+          "name": "continent_id",
+          "type": "integer"
+        },
+        {
+          "name": "continent_name",
+          "type": "character varying(100)"
+        }
+      ],
+      "excludedColumns": [],
+      "file": "cads.continents.csv",
+      "orderBy": [
+        "continent_id"
+      ],
+      "rows": 2,
+      "sha256": "08072afbf61a7fb3060c2eb09a6e0f1c514d45a05d11e4a9ce22b9ce904ec51a",
+      "table": "cads.continents"
+    },
+    {
+      "classification": "reference",
+      "columns": [
+        {
+          "name": "region_id",
+          "type": "integer"
+        },
+        {
+          "name": "region_name",
+          "type": "character varying(100)"
+        },
+        {
+          "name": "continent_id",
+          "type": "integer"
+        }
+      ],
+      "excludedColumns": [],
+      "file": "cads.regions.csv",
+      "orderBy": [
+        "region_id"
+      ],
+      "rows": 2,
+      "sha256": "252733babf1c455577a3ec9b52ab98d6c25a07ebfb40ae4416d2294d6ee4bd05",
+      "table": "cads.regions"
+    },
+    {
+      "classification": "reference",
+      "columns": [
+        {
+          "name": "country_id",
+          "type": "integer"
+        },
+        {
+          "name": "country_name",
+          "type": "character varying(100)"
+        },
+        {
+          "name": "region_id",
+          "type": "integer"
+        }
+      ],
+      "excludedColumns": [],
+      "file": "cads.countries.csv",
+      "orderBy": [
+        "country_id"
+      ],
+      "rows": 4,
+      "sha256": "f8dc4d166460b11afdf90c4b1994985b422ca36584ab63f6ba6b27d68c28466d",
+      "table": "cads.countries"
+    }
+  ]
+}

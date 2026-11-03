@@ -24,7 +24,7 @@ Legend: **[Official]** = vendor tool or documented feature used as designed. **[
 | Export the schema as code? | Yes, in three complementary files | `schema.sql` (restorable DDL), `catalog.json` (structured JSON), `schema.dbml` (readable model) | `pg_dump` [Official], catalog query [Custom], `@dbml/cli db2dbml` [Official] |
 | JSON, XML or YAML? | JSON for the structured catalog (YAML adds nothing and XML is verbose for agents). SQL is still required to rebuild a database; no JSON/YAML/XML format can recreate functions, triggers and policies faithfully. | `catalog.json` | Custom query over `pg_catalog` |
 | Export master tables, not Excel? | Yes: CSV produced by Postgres `COPY` | `db/master/<schema>.<table>.csv` | `COPY ... TO STDOUT (FORMAT csv, HEADER)` [Official] |
-| Can Devin use them? | Yes: load into a local Postgres with `\copy`, generate TypeScript constants from them, read them as context | Same files | `bootstrap_local.sh`, `gen_ts_enums.py` |
+| Can Devin use them? | Yes: read them as context and generate TypeScript constants from them | Same files | `gen_ts_enums.py` |
 
 Why CSV over JSONL for master data: Postgres reads it back natively with `COPY FROM` (no loader code), it keeps the NULL versus empty-string distinction (unquoted empty field = NULL, `""` = empty string), it handles embedded commas and newlines, and a one-row change shows up as a one-line diff in pull requests. JSONL is a reasonable alternative but needs custom load code; it is not used here.
 
@@ -58,7 +58,7 @@ Principles
 | P9 | Plain `pg_dump` output assumed stable | Since the August 2025 security releases (CVE-2025-8714) plain dumps contain `\restrict <key>` and `\unrestrict <key>` lines, with a random key per run unless `--restrict-key` is passed. | Fixed `--restrict-key`, detected automatically; client and server major versions checked. |
 | P10 | `runs-on: ubuntu-latest` | GitHub-hosted runners cannot reach an internal database. | Self-hosted runner inside the network for the export job only. |
 | P11 | `node-version: '20'` | Node.js 20 reached end of life in April 2026. | Node 24 LTS. |
-| P12 | Layers 3 and 4 (Spring Boot and TypeScript contracts) described without implementation | No check would actually run. | Hibernate `ddl-auto=validate` against the bootstrapped DB, OpenAPI type generation, generated master-data constants (Section 9). |
+| P12 | Layers 3 and 4 (Spring Boot and TypeScript contracts) described without implementation | No check would actually run. | Hibernate `ddl-auto=validate`, OpenAPI type generation, generated master-data constants (Section 9). |
 | P13 | No limits or personal-data controls on master exports | One misconfigured table could push customer data into a third-party agent's context. | Allowlist, `excludeColumns`, name-pattern guard requiring explicit `piiReviewed`, row and byte limits. |
 | P14 | Emoji in report output | House style. | Plain text. |
 
@@ -75,11 +75,8 @@ flowchart LR
   GIT --> REVIEW{Owner review}
   REVIEW -->|merge| MAIN[main]
   subgraph Devin["Devin Cloud VM / CI / laptops"]
-    BOOT[bootstrap_local.sh] --> LPG[(Local Postgres)]
-    LPG --> APP[Spring Boot ddl-auto=validate]
     GEN[gen_ts_enums.py] --> TS[frontend/src/generated]
   end
-  MAIN --> BOOT
   MAIN --> GEN
 ```
 
@@ -87,13 +84,12 @@ flowchart LR
 
 | Path | Content | Produced by | Consumed by |
 |---|---|---|---|
-| `db/schema/schema.sql` | DDL for the configured schemas: tables, constraints, indexes, views, sequences, functions, triggers, policies, comments. No owners, grants or tablespaces. | `pg_dump --schema-only` [Official] | `bootstrap_local.sh`, Testcontainers tests |
+| `db/schema/schema.sql` | DDL for the configured schemas: tables, constraints, indexes, views, sequences, functions, triggers, policies, comments. No owners, grants or tablespaces. | `pg_dump --schema-only` [Official] | Devin context, review |
 | `db/schema/catalog.json` | Structured, sorted description of every object, used for diffs and as precise agent context | `tools/catalog.sql` [Custom] | `diff.py`, Devin, humans |
 | `db/schema/schema.dbml` | Compact readable model, renders on dbdiagram.io | `@dbml/cli db2dbml` [Official] | Devin context, documentation |
-| `db/master/<schema>.<table>.csv` | Allowlisted reference data, ordered by key | `COPY` [Official] | `bootstrap_local.sh`, `gen_ts_enums.py` |
-| `db/master/manifest.json` | Per table: file, row count, SHA-256, columns and types, order key, classification | `export.py` [Custom] | bootstrap verification, review |
-| `db/seed/*.sql` | Synthetic users and records for local runs and the Knowledge Hub personas | Hand-written | `bootstrap_local.sh` |
-| `db/config/export.config.json` | What to export and the safety limits | Hand-written, reviewed | `export.py`, `bootstrap_local.sh` |
+| `db/master/<schema>.<table>.csv` | Allowlisted reference data, ordered by key | `COPY` [Official] | `gen_ts_enums.py`, Devin context |
+| `db/master/manifest.json` | Per table: file, row count, SHA-256, columns and types, order key, classification | `export.py` [Custom] | review |
+| `db/config/export.config.json` | What to export and the safety limits | Hand-written, reviewed | `export.py` |
 | `db/out/db_sync_report.md` | Human report of what changed (gitignored) | `export.py` | PR body |
 
 Repository layout:
@@ -106,14 +102,10 @@ db/
   schema/schema.dbml
   master/<schema>.<table>.csv
   master/manifest.json
-  seed/010_personas.sql
-  seed/020_kh_fixtures.sql
   tools/catalog.sql
   tools/export.py
   tools/diff.py
-  tools/bootstrap_local.sh
   tools/gen_ts_enums.py
-  docker-compose.local.yml
   out/                          gitignored
 ```
 
@@ -182,7 +174,7 @@ Connection settings come from standard libpq environment variables (`PGHOST`, `P
 |---|---|
 | `schemas` | Schemas to dump. With `-n`, pg_dump does not dump objects outside these schemas, including extensions, which is why extensions are listed separately. |
 | `excludeTablePatterns` | Passed to `pg_dump -T` (for example partitions of audit logs). |
-| `extensions` | Created by `bootstrap_local.sh` before loading `schema.sql`. |
+| `extensions` | Informational list of extensions the schema depends on; the exporter never creates anything. |
 | `restrictKey` | Fixed alphanumeric key for `\restrict` so dumps are byte-stable. |
 | `piiColumnPattern` | Case-insensitive pattern; matching columns block the export unless excluded or the table has `"piiReviewed": true`. |
 | `limits` | Hard caps that stop transactional tables being exported as master data. |
@@ -822,142 +814,7 @@ Add to `CODEOWNERS`:
 
 ## 7. Using the exports in Devin (no database access)
 
-### 7.1 Local Postgres
-
-Official `postgres` image, same major version as production.
-
-`db/docker-compose.local.yml`
-
-```yaml
-# Local Postgres for Devin, developers and CI. Official image; pin the same MAJOR version as production.
-services:
-  postgres:
-    image: postgres:16
-    environment:
-      POSTGRES_PASSWORD: localdev
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 2s
-      timeout: 3s
-      retries: 30
-```
-
-If Docker is not available in your Devin environment, install `postgresql-16` and `postgresql-client-16` from the PGDG apt repository (https://www.postgresql.org/download/linux/ubuntu/) in the Devin `initialize` step and start the service in `maintenance`.
-
-### 7.2 Bootstrap
-
-Rebuilds the local database: extensions, `schema.sql`, master CSVs in one transaction with foreign-key triggers disabled (`session_replication_role = replica`, local superuser only), sequence and identity counters moved past loaded ids, synthetic seed files, then a row-count check against the manifest. Refuses to run unless `PGHOST` is local.
-
-`db/tools/bootstrap_local.sh`
-
-```bash
-#!/usr/bin/env bash
-# Rebuild the LOCAL database from db/ artifacts (schema.sql + master CSVs + synthetic seed).
-# Used by Devin, developers and CI. Refuses to run against anything that is not local.
-set -euo pipefail
-
-DB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CONFIG="$DB_DIR/config/export.config.json"
-: "${PGHOST:=localhost}" "${PGPORT:=5432}" "${PGUSER:=postgres}"
-export PGHOST PGPORT PGUSER
-LOCAL_DB="${LOCAL_DB:-$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["localDatabase"])' "$CONFIG")}"
-
-case "$PGHOST" in
-  localhost|127.0.0.1|::1|/*) ;;
-  *) echo "Refusing to run: PGHOST=$PGHOST is not local" >&2; exit 2 ;;
-esac
-
-PSQL=(psql -X -q -v ON_ERROR_STOP=1)
-TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
-
-echo "[bootstrap] recreating database $LOCAL_DB"
-"${PSQL[@]}" -d postgres -c "DROP DATABASE IF EXISTS \"$LOCAL_DB\" WITH (FORCE);" -c "CREATE DATABASE \"$LOCAL_DB\";"
-
-echo "[bootstrap] extensions"
-for ext in $(python3 -c 'import json,sys; print(" ".join(json.load(open(sys.argv[1])).get("extensions", [])))' "$CONFIG"); do
-  "${PSQL[@]}" -d "$LOCAL_DB" -c "CREATE EXTENSION IF NOT EXISTS \"$ext\";"
-done
-
-echo "[bootstrap] schema"
-"${PSQL[@]}" -d "$LOCAL_DB" -f "$DB_DIR/schema/schema.sql" > /dev/null
-
-echo "[bootstrap] master data"
-python3 - "$DB_DIR" > "$TMP/load.sql" <<'PY'
-import json, sys
-from pathlib import Path
-db = Path(sys.argv[1])
-manifest = json.loads((db / "master" / "manifest.json").read_text())
-schemas = ",".join(manifest["schemas"])
-q = lambda n: '"' + n.replace('"', '""') + '"'
-print("SET session_replication_role = replica;")  # FK and user triggers off during load (local superuser only)
-for t in manifest["tables"]:
-    schema, name = t["table"].split(".", 1)
-    cols = ", ".join(q(c["name"]) for c in t["columns"])
-    path = str(db / "master" / t["file"]).replace("'", "''")
-    print(f"\\copy {q(schema)}.{q(name)} ({cols}) FROM '{path}' WITH (FORMAT csv, HEADER true)")
-print("SET session_replication_role = origin;")
-print(f"""DO $$
-DECLARE r record; seq text; maxv bigint;
-BEGIN
-  FOR r IN
-    SELECT n.nspname AS s, c.relname AS t, a.attname AS col
-    FROM pg_attribute a
-    JOIN pg_class c ON c.oid = a.attrelid
-    JOIN pg_namespace n ON n.oid = c.relnamespace
-    WHERE c.relkind IN ('r', 'p') AND a.attnum > 0 AND NOT a.attisdropped
-      AND n.nspname = ANY (string_to_array('{schemas}', ','))
-  LOOP
-    seq := pg_get_serial_sequence(format('%I.%I', r.s, r.t), r.col);
-    IF seq IS NOT NULL THEN
-      EXECUTE format('SELECT max(%I) FROM %I.%I', r.col, r.s, r.t) INTO maxv;
-      IF maxv IS NOT NULL THEN PERFORM setval(seq, maxv, true); END IF;
-    END IF;
-  END LOOP;
-END $$;""")
-PY
-"${PSQL[@]}" -d "$LOCAL_DB" -1 -f "$TMP/load.sql"
-
-shopt -s nullglob
-for f in "$DB_DIR"/seed/*.sql; do
-  echo "[bootstrap] seed $(basename "$f")"
-  "${PSQL[@]}" -d "$LOCAL_DB" -1 -f "$f"
-done
-
-echo "[bootstrap] verifying row counts"
-python3 - "$DB_DIR" "$LOCAL_DB" <<'PY'
-import json, subprocess, sys
-from pathlib import Path
-db, name = Path(sys.argv[1]), sys.argv[2]
-bad = 0
-for t in json.loads((db / "master" / "manifest.json").read_text())["tables"]:
-    s, n = t["table"].split(".", 1)
-    got = int(subprocess.check_output(["psql", "-X", "-At", "-d", name, "-c", f'SELECT count(*) FROM "{s}"."{n}"']).decode())
-    # seed files may add rows; master rows must all be there
-    if got < t["rows"]:
-        print(f"  MISMATCH {t['table']}: expected >= {t['rows']}, got {got}"); bad += 1
-sys.exit(1 if bad else 0)
-PY
-echo "[bootstrap] done: postgresql://$PGUSER@$PGHOST:$PGPORT/$LOCAL_DB"
-```
-
-Notes:
-
-- Restore with a `psql` client at least as new as the `pg_dump` that wrote `schema.sql`; older clients do not understand the `\restrict` lines.
-- If the application uses Flyway or Liquibase, see Section 10, question 2: migrations should then build the local schema and `schema.sql` becomes the reference that migrations are checked against.
-
-### 7.3 Devin environment and knowledge
-
-Add to the Devin environment (the full file is in the Knowledge Hub spec, Section 9):
-
-```yaml
-maintenance:
-  - name: Local database from repo artifacts (no access to any shared database)
-    run: |
-      docker compose -f db/docker-compose.local.yml up -d --wait
-      PGHOST=localhost PGUSER=postgres PGPASSWORD=localdev bash db/tools/bootstrap_local.sh
-```
+Devin and developers read the exported files directly; no local database container is used.
 
 Devin knowledge entry:
 
@@ -966,12 +823,11 @@ Database rules for this repository:
 1. You have no access to any shared database and must not ask for one. The source of truth for the schema
    is db/schema/schema.sql (exact DDL), db/schema/catalog.json (structured) and db/schema/schema.dbml (overview).
    Reference data is in db/master/*.csv, described by db/master/manifest.json.
-2. To get a working database: bash db/tools/bootstrap_local.sh (local Postgres from db/docker-compose.local.yml).
-3. Never edit files in db/schema or db/master by hand; they are regenerated nightly from the real database.
+2. Never edit files in db/schema or db/master by hand; they are regenerated nightly from the real database.
    Schema changes go through the application's migration process.
-4. Test or demo data goes in db/seed/*.sql and must be synthetic.
-5. When you change entities, DTOs or master-data usage, run the contract checks:
-   backend: start with the local profile (ddl-auto=validate) and run the schema contract test;
+3. Test or demo data must be synthetic.
+4. When you change entities, DTOs or master-data usage, run the contract checks:
+   backend: start with the local profile (ddl-auto=validate);
    frontend: python3 db/tools/gen_ts_enums.py and regenerate OpenAPI types; commit any diff.
 ```
 
@@ -987,7 +843,7 @@ Database rules for this repository:
 |---|---|---|---|
 | 1. Schema drift | Real DB vs repo | Nightly export + structured diff + PR | Official tools + custom diff |
 | 2. Master data drift | Real DB vs repo | Same run; row-level diff by key | Custom |
-| 3. Backend contract | JPA entities vs schema | Hibernate `ddl-auto=validate` on startup against the bootstrapped DB; schema test with Testcontainers | Official |
+| 3. Backend contract | JPA entities vs schema | Hibernate `ddl-auto=validate` on startup | Official |
 | 4. Frontend contract | TypeScript types vs API and master data | `openapi-typescript` from springdoc's `/v3/api-docs`; generated master-data constants; CI fails on diff | Official + custom generator |
 
 ### 9.1 Spring Boot local profile
@@ -998,39 +854,13 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/appdb_local
     username: postgres
-    password: ${LOCAL_PG_PASSWORD:localdev}
+    password: ${LOCAL_PG_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate      # fail fast if an entity does not match db/schema/schema.sql
   flyway:
     enabled: false            # see open question 2 if Flyway owns the schema
 ```
-
-### 9.2 Schema contract test (Testcontainers)
-
-Runs in CI and in Devin with Docker. Class and package names depend on your Testcontainers major version; adjust imports accordingly.
-
-```java
-@SpringBootTest(properties = "spring.jpa.hibernate.ddl-auto=validate")
-@Testcontainers
-class SchemaContractTest {
-
-  @Container
-  @ServiceConnection
-  static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:16")
-      .withCopyFileToContainer(MountableFile.forHostPath("../db/tools/extensions.sql"),
-          "/docker-entrypoint-initdb.d/10-extensions.sql")
-      .withCopyFileToContainer(MountableFile.forHostPath("../db/schema/schema.sql"),
-          "/docker-entrypoint-initdb.d/20-schema.sql");
-
-  @Test
-  void entitiesMatchExportedSchema() {
-    // Context start-up performs the validation; reaching this line means it passed.
-  }
-}
-```
-
-`db/tools/extensions.sql` contains one `CREATE EXTENSION IF NOT EXISTS ...;` line per entry in `extensions`.
 
 ### 9.3 Generated master-data constants
 
@@ -1095,7 +925,7 @@ OpenAPI types **[Official]**: `npx openapi-typescript http://localhost:8080/v3/a
 
 1. **Schemas in scope.** Which schemas should be exported? If one of them belongs to a workflow engine that creates its own tables on start-up (for example Flowable), I recommend excluding it and letting the engine create it locally.
 2. **Migrations.** Does the backend use Flyway or Liquibase? If yes, migrations should build the local schema, and `schema.sql` becomes the reference that the migrations are verified against nightly.
-3. **Postgres version.** Production major version, so the local image, `pg_dump` client and runner match.
+3. **Postgres version.** Production major version, so the `pg_dump` client and runner match.
 4. **Master table list.** Which tables are reference data, and do any contain personal, confidential or entitlement-sensitive columns?
 5. **Approval.** Placing schema DDL and reference data in a repository that a third-party cloud agent reads may need information-security or data-governance approval under your firm's classification policy. Is that approval in place or needed?
 6. **Replica.** Is a read replica available for the nightly export?
@@ -1108,9 +938,8 @@ OpenAPI types **[Official]**: `npx openapi-typescript http://localhost:8080/v3/a
 |---|---|---|---|
 | 0. Approvals | Questions 1 to 8; read-only role; runner | Config committed | DBA and data governance sign-off on the allowlist |
 | 1. First export | `catalog.sql`, `export.py`, `diff.py`, manual run from a workstation | First PR with `db/` artifacts | Second run returns exit code 0 (deterministic) |
-| 2. Local bootstrap | `docker-compose.local.yml`, `bootstrap_local.sh`, seed files | Devin environment updated | Devin builds the DB and starts the app with `ddl-auto=validate` |
 | 3. Nightly automation | Workflow, CODEOWNERS, report as PR body | Nightly PR | One PR at most; report readable |
-| 4. Contract checks | Testcontainers test, OpenAPI type generation, `gen_ts_enums.py` in CI | CI jobs | An entity/column mismatch fails CI with a clear message |
+| 4. Contract checks | OpenAPI type generation, `gen_ts_enums.py` in CI | CI jobs | An entity/column mismatch fails CI with a clear message |
 | 5. Knowledge Hub link | Seed personas and fixtures for scenarios; R7 impact rule active | Seed files | Master data change re-records only affected scenarios |
 
 ## 12. Acceptance criteria
@@ -1118,7 +947,6 @@ OpenAPI types **[Official]**: `npx openapi-typescript http://localhost:8080/v3/a
 - No database credentials or network routes exist in Devin's configuration or the repository.
 - Exporter is read-only, bounded by timeouts, and blocks unreviewed personal-data column names.
 - Two exports with no database change produce byte-identical files (exit code 0).
-- `bootstrap_local.sh` builds a working local database from a clean machine in one command and verifies row counts.
 - Schema or master-data changes in the real database appear as a single reviewed PR with a readable report.
 - Backend start-up with `ddl-auto=validate` and the TypeScript generation checks pass on `main`.
 
@@ -1128,6 +956,5 @@ Executed against a local PostgreSQL 16.15 cluster before publication:
 
 - Test database with two schemas, an enum, identity and serial columns, foreign keys, an expression index, a view, a PL/pgSQL trigger function and trigger, row-level security with a policy, a table comment, an extension, and data with commas, embedded newlines and NULLs.
 - Export as the read-only `db_exporter` role: personal-data guard blocked `contact_email`; after excluding it the export succeeded; `-T` exclusion honoured; `\restrict dbexport` pinned; a second run returned exit code 0.
-- `bootstrap_local.sh` into a fresh database: schema, trigger, master rows (including an embedded newline), seed file, row-count check; identity sequence advanced past loaded ids; non-local `PGHOST` refused with exit code 2.
 - Drift: added column, dropped index, new enum value, changed function, inserted/updated/deleted master rows; the report listed each change as shown in Section 6.5.
 - `gen_ts_enums.py` output shown in Section 9.3.
