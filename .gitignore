@@ -2,3 +2,7 @@
 .DS_Store
 db/out/
 __pycache__/
+knowledge-hub/.env
+knowledge-hub/node_modules/
+knowledge-hub/out/
+knowledge-hub/playwright/.auth/

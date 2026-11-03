@@ -1,0 +1,32 @@
+# Devin environment (Settings > Devin's Environment). Secrets are referenced as $NAME and are
+# written in maintenance, not initialize, so they are never baked into the machine image.
+initialize:
+  - name: System packages (ffmpeg for GIFs, Postgres client, fonts for stable rendering)
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y ffmpeg postgresql-client fonts-liberation fonts-noto-core
+  - name: Node LTS
+    run: |
+      curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+      sudo apt-get install -y nodejs
+  - name: Playwright browser (version comes from knowledge-hub/package-lock.json)
+    run: |
+      cd knowledge-hub && npm ci && npx playwright install --with-deps chromium
+
+maintenance:
+  - name: Dependencies
+    run: |
+      cd knowledge-hub && npm ci
+  - name: Knowledge Hub runtime env
+    run: |
+      cat > knowledge-hub/.env <<EOF
+      APP_BASE_URL=http://localhost:3000
+      KH_SEED_PASSWORD=$KH_SEED_PASSWORD
+      KH_S3_ENDPOINT=$KH_S3_ENDPOINT
+      KH_S3_REGION=$KH_S3_REGION
+      KH_S3_BUCKET=$KH_S3_BUCKET
+      KH_S3_PREFIX=knowledge-hub
+      KH_PUBLIC_BASE_URL=$KH_PUBLIC_BASE_URL
+      KH_S3_ACCESS_KEY_ID=$KH_S3_ACCESS_KEY_ID
+      KH_S3_SECRET_ACCESS_KEY=$KH_S3_SECRET_ACCESS_KEY
+      EOF

@@ -1,0 +1,20 @@
+version: 1
+
+# Any change matching these globs re-runs every active scenario.
+globalImpact:
+  - "frontend/package.json"
+  - "frontend/package-lock.json"
+  - "frontend/src/app/**"              # shell, layout, router
+  - "frontend/src/design-system/**"    # shared components and theme
+  - "frontend/src/auth/**"
+  - "frontend/src/i18n/**"
+  - "backend/**/security/**"
+  - "knowledge-hub/fixtures/**"
+  - "knowledge-hub/lib/recorder.ts"
+  - "knowledge-hub/lib/gif-encoder.ts"
+  - "knowledge-hub/playwright.config.ts"
+
+personas:
+  - { id: analyst, label: "Analyst" }
+  - { id: manager, label: "Manager" }
+  - { id: admin, label: "Administrator" }

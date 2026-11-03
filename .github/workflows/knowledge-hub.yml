@@ -1,0 +1,67 @@
+name: knowledge-hub
+on:
+  pull_request:
+    paths-ignore: ["docs/**"]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "impacted | all"
+        default: impacted
+
+# Publishing rewrites manifest.json in the bucket; never let two runs on the same ref overlap.
+concurrency:
+  group: knowledge-hub-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  scenarios:
+    runs-on: ubuntu-latest   # use a self-hosted runner if the store or app are internal-only
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # impact analysis and --only-changed need history
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          cd knowledge-hub && npm ci && npx playwright install --with-deps chromium
+      - name: Typecheck, registry and coverage
+        working-directory: knowledge-hub
+        run: |
+          npm run typecheck
+          npm run kh -- validate
+          npm run kh -- coverage   # add --strict once required scenarios exist
+      # Recording needs a running app. Set the APP_BASE_URL repository variable to enable it.
+      - name: Record scenarios
+        if: vars.APP_BASE_URL != ''
+        working-directory: knowledge-hub
+        env:
+          APP_BASE_URL: ${{ vars.APP_BASE_URL }}
+          KH_SEED_PASSWORD: ${{ secrets.KH_SEED_PASSWORD }}
+        run: |
+          if [ "${{ github.event.inputs.mode }}" = "all" ]; then
+            npm run kh -- run --all
+          else
+            npm run kh -- run --impacted --base "origin/${{ github.base_ref || 'main' }}"
+          fi
+      - name: Publish (main only)
+        if: vars.APP_BASE_URL != '' && github.ref == 'refs/heads/main'
+        working-directory: knowledge-hub
+        env:
+          KH_S3_ENDPOINT: ${{ secrets.KH_S3_ENDPOINT }}
+          KH_S3_REGION: ${{ secrets.KH_S3_REGION }}
+          KH_S3_BUCKET: ${{ secrets.KH_S3_BUCKET }}
+          KH_PUBLIC_BASE_URL: ${{ secrets.KH_PUBLIC_BASE_URL }}
+          KH_S3_ACCESS_KEY_ID: ${{ secrets.KH_S3_ACCESS_KEY_ID }}
+          KH_S3_SECRET_ACCESS_KEY: ${{ secrets.KH_S3_SECRET_ACCESS_KEY }}
+        run: npm run kh -- publish
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: knowledge-hub-out
+          path: knowledge-hub/out
+          if-no-files-found: ignore

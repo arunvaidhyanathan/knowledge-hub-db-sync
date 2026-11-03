@@ -1,0 +1,14 @@
+modules:
+  - id: projects
+    name: Projects
+    owner: "team-projects"
+    frontendPaths: ["frontend/src/features/projects/**"]
+    backendPaths: ["backend/src/main/java/**/project/**"]
+    dbTables: ["app.project", "app.project_status"]
+    features:
+      - id: project
+        name: Project
+        routes: ["/projects", "/projects/:id", "/projects/:id/edit"]
+        capabilities: [list, view, create, edit, delete, search, filter, validation, empty, workflow, rbac]
+        personas: [analyst, manager, admin]
+        personaSensitive: [delete, workflow]

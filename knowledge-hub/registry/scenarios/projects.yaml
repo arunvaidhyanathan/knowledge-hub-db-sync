@@ -1,0 +1,28 @@
+scenarios:
+  - id: projects.project.create
+    title: "Create a new project"
+    description: "Open the Projects page, start a new project, enter a name and save it. The new project appears in the list."
+    module: projects
+    feature: project
+    capability: create
+    persona: analyst
+    spec: scenarios/projects/project-create.kh.spec.ts
+    routes: ["/projects"]
+    impactGlobs:
+      - "frontend/src/features/projects/components/ProjectForm*"
+      - "frontend/src/features/projects/pages/ProjectList*"
+      - "backend/src/main/java/**/project/ProjectController.java"
+    dataDeps: ["app.project", "app.project_status"]
+    maxSeconds: 10
+    owner: "team-projects"
+
+  - id: projects.project.create.validation-error
+    title: "See validation errors when creating a project"
+    description: "Try to save a project without a name and see the inline error message that explains what is required."
+    module: projects
+    feature: project
+    capability: validation
+    persona: analyst
+    spec: scenarios/projects/project-create.kh.spec.ts
+    impactGlobs: ["frontend/src/features/projects/components/ProjectForm*"]
+    owner: "team-projects"
