@@ -6,7 +6,6 @@
   ],
   "excludeTablePatterns": [],
   "extensions": [],
-  "restrictKey": "dbexport",
   "piiColumnPattern": "(?i)(email|phone|mobile|ssn|tax_?id|dob|birth|address|account_?(no|num)|card|salary|passport)",
   "limits": {
     "maxRowsPerTable": 50000,

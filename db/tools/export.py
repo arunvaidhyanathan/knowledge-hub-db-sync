@@ -3,7 +3,8 @@
 
 Runs ONLY inside the trusted network (nightly job or an engineer's workstation) with a read-only role.
 Connection comes from standard libpq env vars (PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSFILE or
-PGPASSWORD, PGSSLMODE). Standard library only; needs pg_dump/psql whose major version >= the server's.
+PGPASSWORD, PGSSLMODE). Needs only psycopg (requirements.txt); no pg_dump or psql. schema.sql is
+generated from the catalog by ddl.py.
 
 Exit codes: 0 = no changes, 10 = artifacts changed (open a PR), 1 = error.
 Usage: python3 db/tools/export.py [--dbml] [--report db/out/db_sync_report.md]
@@ -25,6 +26,10 @@ from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from diff import diff_catalog, diff_master  # noqa: E402
+from ddl import generate as generate_ddl  # noqa: E402
+
+import psycopg  # noqa: E402
+from psycopg import sql  # noqa: E402
 
 DB_DIR = Path(__file__).resolve().parents[1]
 CONFIG = DB_DIR / "config" / "export.config.json"
@@ -32,61 +37,40 @@ SCHEMA_DIR = DB_DIR / "schema"
 MASTER_DIR = DB_DIR / "master"
 
 
-def env() -> dict:
-    e = dict(os.environ)
-    e["PGAPPNAME"] = "db-export"
-    e["PGCLIENTENCODING"] = "UTF8"
-    # Deterministic text output for dates/times regardless of server or runner defaults.
-    e["PGOPTIONS"] = "-c TimeZone=UTC -c DateStyle=ISO,YMD -c default_transaction_read_only=on -c statement_timeout=300000"
-    return e
-
-
-def run(cmd: list[str]) -> bytes:
-    res = subprocess.run(cmd, env=env(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if res.returncode != 0:
-        sys.stderr.write(res.stderr.decode(errors="replace"))
-        raise SystemExit(f"command failed: {cmd[0]} (exit {res.returncode})")
-    return res.stdout
-
-
-def psql(sql: str) -> str:
-    return run(["psql", "-X", "-q", "-At", "-v", "ON_ERROR_STOP=1", "-c", sql]).decode().strip()
+def connect() -> psycopg.Connection:
+    """One read-only, repeatable-read transaction for the whole export, so every file sees the same snapshot."""
+    conn = psycopg.connect(
+        "",  # host, port, db, user, password and sslmode come from PG* env vars (see .env)
+        application_name="db-export",
+        client_encoding="UTF8",
+        # Deterministic text output for dates/times regardless of server or runner defaults.
+        options="-c TimeZone=UTC -c DateStyle=ISO,YMD -c statement_timeout=300000 -c lock_timeout=5000",
+    )
+    conn.isolation_level = psycopg.IsolationLevel.REPEATABLE_READ
+    conn.read_only = True
+    return conn
 
 
 def qi(name: str) -> str:
     return '"' + name.replace('"', '""') + '"'
 
 
-def check_versions() -> dict:
-    server = int(psql("SHOW server_version_num"))
-    dump_ver = run(["pg_dump", "--version"]).decode()
-    m = re.search(r"(\d+)\.(\d+)", dump_ver)
-    client_major = int(m.group(1)) if m else 0
-    if client_major < server // 10000:
-        raise SystemExit(f"pg_dump {client_major} is older than server {server // 10000}; install a newer client")
-    has_restrict = "--restrict-key" in run(["pg_dump", "--help"]).decode()
-    return {"serverVersionNum": server, "pgDump": dump_ver.strip(), "restrictKeySupported": has_restrict}
+def check_versions(conn: psycopg.Connection) -> dict:
+    server = conn.info.server_version
+    return {"serverVersionNum": server, "client": f"psycopg {psycopg.__version__}, libpq {psycopg.pq.version()}"}
 
 
-def dump_schema(cfg: dict, versions: dict) -> bytes:
-    cmd = ["pg_dump", "--schema-only", "--no-owner", "--no-privileges", "--no-tablespaces",
-           "--no-security-labels", "--lock-wait-timeout=5000"]
-    if versions["restrictKeySupported"]:
-        cmd.append(f"--restrict-key={cfg['restrictKey']}")
-    for s in cfg["schemas"]:
-        cmd += ["-n", s]
-    for pattern in cfg.get("excludeTablePatterns", []):
-        cmd += ["-T", pattern]
-    text = run(cmd).decode()
-    # Drop lines that change on every minor upgrade; versions go in the report instead.
-    text = re.sub(r"^-- Dumped (from database|by pg_dump) version .*\n", "", text, flags=re.M)
-    return text.encode()
+def export_catalog(conn: psycopg.Connection, cfg: dict) -> dict:
+    query = (DB_DIR / "tools" / "catalog.sql").read_text()
+    query = query.replace(":'schemas'", sql.Literal(",".join(cfg["schemas"])).as_string(conn))
+    with conn.cursor() as cur:
+        cur.execute(query)
+        return json.loads(cur.fetchone()[0])
 
 
-def export_catalog(cfg: dict) -> dict:
-    out = run(["psql", "-X", "-q", "-At", "-v", "ON_ERROR_STOP=1",
-               "-v", f"schemas={','.join(cfg['schemas'])}", "-f", str(DB_DIR / "tools" / "catalog.sql")])
-    return json.loads(out)
+def copy_csv(conn: psycopg.Connection, query: str) -> bytes:
+    with conn.cursor() as cur, cur.copy(query) as cp:
+        return b"".join(bytes(chunk) for chunk in cp)
 
 
 def primary_key(table: dict) -> list[str]:
@@ -98,7 +82,7 @@ def primary_key(table: dict) -> list[str]:
     return []
 
 
-def export_master(cfg: dict, catalog: dict) -> tuple[dict[str, bytes], list[dict]]:
+def export_master(conn: psycopg.Connection, cfg: dict, catalog: dict) -> tuple[dict[str, bytes], list[dict]]:
     tables = {f"{t['schema']}.{t['name']}": t for t in catalog["tables"]}
     pii = re.compile(cfg["piiColumnPattern"].replace("(?i)", ""), re.I)
     limits = cfg["limits"]
@@ -122,9 +106,9 @@ def export_master(cfg: dict, catalog: dict) -> tuple[dict[str, bytes], list[dict
             raise SystemExit(f"{fq}: no orderBy and no primary key; exports must be deterministic")
         schema, name = fq.split(".", 1)
         select = ", ".join(qi(c["name"]) for c in cols)
-        sql = (f"COPY (SELECT {select} FROM {qi(schema)}.{qi(name)} ORDER BY {', '.join(qi(c) for c in order)}) "
+        query = (f"COPY (SELECT {select} FROM {qi(schema)}.{qi(name)} ORDER BY {', '.join(qi(c) for c in order)}) "
                f"TO STDOUT WITH (FORMAT csv, HEADER true)")
-        data = run(["psql", "-X", "-q", "-v", "ON_ERROR_STOP=1", "-c", sql])
+        data = copy_csv(conn, query)
         rows = sum(1 for _ in csv.reader(io.StringIO(data.decode("utf-8"), newline=""))) - 1
         if rows > limits["maxRowsPerTable"]:
             raise SystemExit(f"{fq}: {rows} rows exceeds maxRowsPerTable; is this really master data?")
@@ -167,14 +151,16 @@ def main() -> int:
     args = ap.parse_args()
 
     cfg = json.loads(CONFIG.read_text())
-    versions = check_versions()
 
     old_catalog = json.loads((SCHEMA_DIR / "catalog.json").read_text()) if (SCHEMA_DIR / "catalog.json").exists() else {}
     old_master = {p.name: p.read_bytes() for p in MASTER_DIR.glob("*.csv")}
 
-    schema_sql = dump_schema(cfg, versions)
-    catalog = export_catalog(cfg)
-    master_files, master_entries = export_master(cfg, catalog)
+    with connect() as conn:
+        versions = check_versions(conn)
+        catalog = export_catalog(conn, cfg)
+        master_files, master_entries = export_master(conn, cfg, catalog)
+        schema_sql, ddl_notes = generate_ddl(conn, cfg["schemas"], cfg.get("excludeTablePatterns", []))
+        conn.rollback()  # read-only; nothing to commit
 
     changed: list[str] = []
     if write_if_changed(SCHEMA_DIR / "schema.sql", schema_sql):
@@ -199,7 +185,9 @@ def main() -> int:
         "# Nightly database export report",
         "",
         f"- Run at: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}",
-        f"- Server version: {versions['serverVersionNum']}; client: {versions['pgDump']}",
+        f"- Server version: {versions['serverVersionNum']}; client: {versions['client']}",
+        f"- schema.sql: generated by ddl.py; partitions skipped: {ddl_notes['skippedPartitions']}, "
+        f"tables excluded by pattern: {ddl_notes['excludedTables']}",
         f"- Schemas: {', '.join(cfg['schemas'])}",
         f"- Files changed: {len([c for c in changed if 'regenerated' not in c])}",
         "",

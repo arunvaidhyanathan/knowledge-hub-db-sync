@@ -3,14 +3,22 @@
 Exports the schema and allowlisted master tables of the Supabase PostgreSQL database into `db/` as files
 (`db/schema/schema.sql`, `db/schema/catalog.json`, `db/master/*.csv`, `db/master/manifest.json`).
 
-The export is **read-only**: sessions run with `default_transaction_read_only=on`. Nothing is dropped,
-created or written in the database.
+The export is **read-only**: it runs in one read-only transaction. Nothing is dropped, created or written
+in the database.
+
+Pure Python: the only dependency is `psycopg` (`requirements.txt`), which bundles libpq. No `pg_dump`,
+`psql` or Postgres client install is needed. `schema.sql` is generated from the live catalog by
+`db/tools/ddl.py` using the server's own `pg_get_*` functions. Against this database it produces the same
+statements as `pg_dump --schema-only --no-owner --no-privileges`. Partitions are skipped (parents kept),
+and objects it cannot reproduce (domains, composite/range types, aggregates, operators, inheritance,
+foreign tables, rules) stop the export with an error rather than being left out.
 
 ## Setup
 
-1. Install a Postgres client at least as new as the server (Supabase is on Postgres 15):
-   `brew install libpq` (puts `pg_dump`/`psql` in `/opt/homebrew/opt/libpq/bin`, which `.env` points to via `PG_BIN`).
+1. Python 3.10+.
 2. `cp .env.example .env` and set `PGPASSWORD` (raw password, no percent-encoding).
+
+`./run.sh` creates `.venv` and installs `requirements.txt` on first run.
 
 ## Run
 

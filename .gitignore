@@ -2,6 +2,7 @@
 .DS_Store
 db/out/
 __pycache__/
+.venv/
 knowledge-hub/.env
 knowledge-hub/node_modules/
 knowledge-hub/out/

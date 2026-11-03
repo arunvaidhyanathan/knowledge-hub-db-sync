@@ -7,10 +7,17 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 [ -f .env ] || { echo "Missing .env (copy .env.example and set PGPASSWORD)" >&2; exit 1; }
 set -a; . ./.env; set +a
 [ -n "${PGPASSWORD:-}" ] || { echo "PGPASSWORD is empty in .env" >&2; exit 1; }
-if [ -n "${PG_BIN:-}" ] && [ -d "$PG_BIN" ]; then export PATH="$PG_BIN:$PATH"; fi
+
+# Python virtual environment with psycopg (bundles libpq; no Postgres client install needed).
+if [ ! -x .venv/bin/python ]; then
+  python3 -m venv .venv
+fi
+if ! .venv/bin/python -c 'import psycopg' 2>/dev/null; then
+  .venv/bin/pip install -q -r requirements.txt
+fi
 
 set +e
-python3 db/tools/export.py "$@"
+.venv/bin/python db/tools/export.py "$@"
 code=$?
 set -e
 case $code in
